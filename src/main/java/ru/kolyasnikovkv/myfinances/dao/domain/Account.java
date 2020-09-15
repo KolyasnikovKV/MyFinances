@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class Account {
-    private int id;
+    private Long id;
     private int numberAccount;
     private int personID;
     private BigDecimal balance;

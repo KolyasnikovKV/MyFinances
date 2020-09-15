@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="init" author="kk">
+
+        <createTable tableName="person">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints unique="true" nullable="false" primaryKey="true"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nick" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fullname" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!--<createTable tableName="user_role">-->
+            <!--<column name="user_id" type="bigint">-->
+                <!--<constraints nullable="false" foreignKeyName="fk_user_role_user_id" references="users(id)"/>-->
+            <!--</column>-->
+            <!--<column name="role" type="varchar(255)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+        <!--</createTable>-->
+
+        <!--<createTable tableName="account">-->
+            <!--<column name="id" type="serial" autoIncrement="true">-->
+                <!--<constraints unique="true" nullable="false" primaryKey="true"/>-->
+            <!--</column>-->
+            <!--<column name="name" type="varchar(255)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="owner_id" type="bigint">-->
+                <!--<constraints nullable="false" foreignKeyName="fk_users_id" references="users(id)" deleteCascade="true"/>-->
+            <!--</column>-->
+            <!--<column name="balance" type="decimal(11, 2)" defaultValue="0">-->
+            <!--</column>-->
+        <!--</createTable>-->
+
+        <!--<createTable tableName="transaction">-->
+            <!--<column name="id" type="serial" autoIncrement="true">-->
+                <!--<constraints unique="true" nullable="false" primaryKey="true"/>-->
+            <!--</column>-->
+            <!--<column name="amount" type="decimal(11, 2)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="account_from" type="bigint">-->
+                <!--<constraints foreignKeyName="fk_account_from" references="account(id)" nullable="true"-->
+                             <!--deferrable="true"/>-->
+            <!--</column>-->
+            <!--<column name="account_to" type="bigint">-->
+                <!--<constraints foreignKeyName="fk_account_to" references="account(id)" nullable="true"/>-->
+            <!--</column>-->
+            <!--<column name="date" type="date">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+        <!--</createTable>-->
+
+        <!--<createTable tableName="category">-->
+            <!--<column name="id" type="serial" autoIncrement="true">-->
+                <!--<constraints unique="true" nullable="false" primaryKey="true"/>-->
+            <!--</column>-->
+            <!--<column name="name" type="varchar(255)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+        <!--</createTable>-->
+
+        <!--<createTable tableName="transaction_category">-->
+            <!--<column name="transaction_id" type="bigint">-->
+            <!--</column>-->
+            <!--<column name="category_id" type="bigint">-->
+            <!--</column>-->
+        <!--</createTable>-->
+
+        <!--<addForeignKeyConstraint baseTableName="transaction_category"-->
+                                 <!--baseColumnNames="transaction_id"-->
+                                 <!--constraintName="fk_transaction_id"-->
+                                 <!--referencedTableName="transaction"-->
+                                 <!--referencedColumnNames="id"-->
+                                 <!--onDelete="SET NULL"/>-->
+
+        <!--<addForeignKeyConstraint baseTableName="transaction_category"-->
+                                 <!--baseColumnNames="category_id"-->
+                                 <!--constraintName="fk_category_id"-->
+                                 <!--referencedTableName="category"-->
+                                 <!--referencedColumnNames="id"-->
+                                 <!--onDelete="SET NULL"/>-->
+    </changeSet>
+</databaseChangeLog>

@@ -8,8 +8,8 @@ import java.util.List;
 @Getter
 @Setter
 public class Person {
-    private int id;
-    private String mail;
+    private Long id;
+    private String email;
     private String password;
     private String nick;
     private String fullName;
