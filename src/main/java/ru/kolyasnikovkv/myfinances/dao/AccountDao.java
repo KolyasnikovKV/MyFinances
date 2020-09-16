@@ -35,7 +35,7 @@ public class AccountDao implements Dao<Account, Integer> {
     private  Account getAccount(ResultSet rs, Account account) throws SQLException {
 
         account.setId(rs.getLong(1));
-        account.setNumberAccount(rs.getInt(2));
+        account.setNumberAccount(rs.getLong(2));
         account.setPerson(rs.getLong(3));
         account.setBalance(rs.getBigDecimal(4));
         account.setCurrency(rs.getLong(5));

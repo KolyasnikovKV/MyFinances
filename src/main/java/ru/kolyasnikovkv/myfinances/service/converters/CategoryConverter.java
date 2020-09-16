@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CategoryConverter {
 
-    public Category categorieDtoToCategory(CategoryDto categorieDto) {
+    public Category categoryDtoToCategory(CategoryDto categorieDto) {
 
         if (categorieDto != null) {
             Category categorie = new Category();
@@ -20,7 +20,7 @@ public class CategoryConverter {
     }
 
 
-    public CategoryDto categorieToCategoryDto(Category categorie) {
+    public CategoryDto categoryToCategoryDto(Category categorie) {
 
         if (categorie != null) {
             CategoryDto categorieDto = new CategoryDto();
@@ -41,7 +41,7 @@ public class CategoryConverter {
         CategoryConverter converter = new CategoryConverter();
 
         for (Category cat : categorie) {
-            listCategoryDto.add(converter.categorieToCategoryDto(cat));
+            listCategoryDto.add(converter.categoryToCategoryDto(cat));
         }
 
         return listCategoryDto;

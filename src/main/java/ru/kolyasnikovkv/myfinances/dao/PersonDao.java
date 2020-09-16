@@ -154,4 +154,30 @@ public class PersonDao implements Dao<Person, Integer> {
             throw new DaoException(except);
         }
     }
+
+    public Person findByNickAndPassword(String nick, String password, Connection connection) {
+
+        Person person = null;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From person " +
+                "WHERE (UPPER(person.nick_name) = UPPER(?) and person.password = ?)")) {
+
+            preparedStatement.setString(1, nick);
+            preparedStatement.setString(2, password);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                person = new Person();
+                getPersonаFromResultSet(rs, person);
+            }
+
+            if (person == null) {
+                throw new SQLException("Not found.");
+            }
+        }
+        catch (SQLException exept) {
+            throw new DaoException(exept);
+        }
+        return null;
+    }
 }

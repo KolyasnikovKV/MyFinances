@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Setter
 public class Account {
     private Long id;
-    private int numberAccount;
+    private Long numberAccount;
     private Long person;
     private BigDecimal balance;
     private Long currency;

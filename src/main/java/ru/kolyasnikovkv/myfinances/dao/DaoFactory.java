@@ -18,10 +18,10 @@ import java.sql.SQLException;
 public class DaoFactory {
     private static DataSource dataSource;
     private static PersonDao personDao;
-   /* private static CategoryDao categorieDao;
+    private static CategoryDao categoryDao;
     private static CurrencyDao currencyDao;
     private static TransactionDao transactionDao;
-    private static AccountDao accountDao;*/
+    private static AccountDao accountDao;
     public static final int maxCountAccount = 5; // Максимальное число счетов у одной персоны
 
     public static DataSource getDataSource() {
@@ -60,5 +60,35 @@ public class DaoFactory {
             personDao = new PersonDao(getDataSource());
         }
         return personDao;
+    }
+
+    public static  CategoryDao getCategoryDao() {
+        if (categoryDao == null) {
+            categoryDao = new CategoryDao();
+        }
+
+        return categoryDao;
+    }
+
+    public static CurrencyDao getCurrencyDao() {
+        if (currencyDao == null) {
+            currencyDao = new CurrencyDao();
+        }
+        return currencyDao;
+    }
+
+    public static TransactionDao getTransactionDao() {
+        if (transactionDao == null) {
+            transactionDao = new TransactionDao();
+        }
+        return transactionDao;
+    }
+
+    public static AccountDao getAccountDao() {
+        if (accountDao == null) {
+            accountDao = new AccountDao();
+        }
+
+        return accountDao;
     }
 }

@@ -11,6 +11,26 @@ import static ru.kolyasnikovkv.myfinances.dao.DaoFactory.getConnection;
 
 public class CategoryDao implements Dao<Category, Integer> {
 
+    public Category findByDescription(String description, Connection connection) {
+        Category category = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From categorie " +
+                "WHERE (UPPER(categorie.description) = UPPER(?))")) {
+
+            preparedStatement.setString(1, description);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                category = new Category();
+                return getCategory(rs, category);
+            }
+        }
+        catch (SQLException exept) {
+            throw new DaoException(exept);
+        }
+
+        return category;
+    }
+
  @Override
     public Category findById(Long id, Connection connection) {
         Category category = null;
