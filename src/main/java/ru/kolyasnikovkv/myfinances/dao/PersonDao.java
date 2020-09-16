@@ -41,7 +41,7 @@ public class PersonDao implements Dao<Person, Integer> {
             }
         }
         catch (SQLException except) {
-            throw new RuntimeException(except);
+            throw new DaoException(except);
         }
         return person;
     }
@@ -62,7 +62,7 @@ public class PersonDao implements Dao<Person, Integer> {
 
         }
         catch (SQLException except) {
-            throw new RuntimeException(except);
+            throw new DaoException(except);
         }
         return person;
     }
@@ -79,7 +79,7 @@ public class PersonDao implements Dao<Person, Integer> {
             }
         }
         catch (SQLException except){
-            throw new RuntimeException(except);
+            throw new DaoException(except);
         }
         return list;
     }

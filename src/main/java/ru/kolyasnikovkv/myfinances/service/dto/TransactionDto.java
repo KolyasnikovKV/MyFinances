@@ -9,9 +9,10 @@ import java.math.BigDecimal;
 @Setter
 public class TransactionDto {
     private Long id = -1L;
-    private  int accountID;
-    private BigDecimal sum;
+    private Long accountIdFrom;
+    private Long accountIdTo;
+    private BigDecimal ammount;
     private String date;
-    private int categorieID;
+    private Long categoryId;
 
 }

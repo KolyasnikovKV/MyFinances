@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 public class AccountDto {
     private Long id = -1L;
     private int numberAccount;
-    private int personId;
+    private Long personId;
     private BigDecimal balance;
-    private int currencyId;
+    private Long currencyId;
     private String description;
 
     public String toString() {

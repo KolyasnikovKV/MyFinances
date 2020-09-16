@@ -36,9 +36,9 @@ public class AccountDao implements Dao<Account, Integer> {
 
         account.setId(rs.getLong(1));
         account.setNumberAccount(rs.getInt(2));
-        account.setPerson(rs.getInt(3));
+        account.setPerson(rs.getLong(3));
         account.setBalance(rs.getBigDecimal(4));
-        account.setCurrency(rs.getInt(5));
+        account.setCurrency(rs.getLong(5));
         account.setDescription(rs.getString(6));
 
         return account;
@@ -81,10 +81,10 @@ public class AccountDao implements Dao<Account, Integer> {
                         "number_account, person_id, balance, currency_id, description) VALUES( ?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS);) {
 
-            preparedStatement.setInt(1, account.getNumberAccount());
-            preparedStatement.setInt(2, account.getPerson());
+            preparedStatement.setLong(1, account.getNumberAccount());
+            preparedStatement.setLong(2, account.getPerson());
             preparedStatement.setBigDecimal(3, account.getBalance());
-            preparedStatement.setInt(4, account.getCurrency());
+            preparedStatement.setLong(4, account.getCurrency());
             preparedStatement.setString(5, account.getDescription());
 
             int affectedRows = preparedStatement.executeUpdate();
@@ -113,10 +113,10 @@ public class AccountDao implements Dao<Account, Integer> {
                      "WHERE account.id = ?"))
         {
 
-            preparedStatement.setInt(1, account.getNumberAccount());
-            preparedStatement.setInt(2, account.getPerson());
+            preparedStatement.setLong(1, account.getNumberAccount());
+            preparedStatement.setLong(2, account.getPerson());
             preparedStatement.setBigDecimal(3, account.getBalance());
-            preparedStatement.setInt(4, account.getCurrency());
+            preparedStatement.setLong(4, account.getCurrency());
             preparedStatement.setString(5, account.getDescription());
             preparedStatement.setLong(6, account.getId());
 
@@ -128,7 +128,7 @@ public class AccountDao implements Dao<Account, Integer> {
             return account;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
 
@@ -186,7 +186,7 @@ public class AccountDao implements Dao<Account, Integer> {
             return list;
         }
         catch (SQLException except) {
-            throw new RuntimeException(except);
+            throw new DaoException(except);
         }
     }
 
@@ -206,7 +206,7 @@ public class AccountDao implements Dao<Account, Integer> {
             }
             return count;
         } catch (SQLException except) {
-            throw new RuntimeException(except);
+            throw new DaoException(except);
         }
 
     }

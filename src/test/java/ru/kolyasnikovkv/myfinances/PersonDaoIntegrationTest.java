@@ -7,6 +7,7 @@ import ru.kolyasnikovkv.myfinances.dao.Dao;
 import ru.kolyasnikovkv.myfinances.dao.DaoFactory;
 import ru.kolyasnikovkv.myfinances.dao.PersonDao;
 import ru.kolyasnikovkv.myfinances.dao.domain.Person;
+import ru.kolyasnikovkv.myfinances.exception.DaoException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -111,7 +112,7 @@ public class PersonDaoIntegrationTest {
             connection.close();
 
         } catch (SQLException except) {
-            throw new RuntimeException(except);
+            throw new DaoException(except);
         }
     }
 }

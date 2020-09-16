@@ -11,8 +11,8 @@ import java.math.BigDecimal;
 public class Account {
     private Long id;
     private int numberAccount;
-    private int person;
+    private Long person;
     private BigDecimal balance;
-    private int currency;
+    private Long currency;
     private String description;
 }
