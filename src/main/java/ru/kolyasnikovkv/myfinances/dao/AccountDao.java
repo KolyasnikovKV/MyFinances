@@ -27,7 +27,7 @@ public class AccountDao implements Dao<Account, Integer> {
             }
         }
         catch (SQLException exept) {
-            throw new RuntimeException(exept);
+            throw new DaoException(exept);
         }
         return account;
     }
@@ -36,9 +36,9 @@ public class AccountDao implements Dao<Account, Integer> {
 
         account.setId(rs.getLong(1));
         account.setNumberAccount(rs.getInt(2));
-        account.setPersonID(rs.getInt(3));
+        account.setPerson(rs.getInt(3));
         account.setBalance(rs.getBigDecimal(4));
-        account.setCurrencyID(rs.getInt(5));
+        account.setCurrency(rs.getInt(5));
         account.setDescription(rs.getString(6));
 
         return account;
@@ -47,9 +47,9 @@ public class AccountDao implements Dao<Account, Integer> {
     private void setPreparedStatement(PreparedStatement preparedStatement, Account account) throws SQLException {
 
         preparedStatement.setLong(1, account.getNumberAccount());
-        preparedStatement.setLong(2, account.getPersonID());
+        preparedStatement.setLong(2, account.getPerson());
         preparedStatement.setBigDecimal(3, account.getBalance());
-        preparedStatement.setLong(4, account.getCurrencyID());
+        preparedStatement.setLong(4, account.getCurrency());
         preparedStatement.setString(5, account.getDescription());
 
     }
@@ -69,7 +69,7 @@ public class AccountDao implements Dao<Account, Integer> {
             }
         }
         catch (SQLException exept) {
-            throw new RuntimeException(exept);
+            throw new DaoException(exept);
         }
 
         return list;
@@ -82,9 +82,9 @@ public class AccountDao implements Dao<Account, Integer> {
                 Statement.RETURN_GENERATED_KEYS);) {
 
             preparedStatement.setInt(1, account.getNumberAccount());
-            preparedStatement.setInt(2, account.getPersonID());
+            preparedStatement.setInt(2, account.getPerson());
             preparedStatement.setBigDecimal(3, account.getBalance());
-            preparedStatement.setInt(4, account.getCurrencyID());
+            preparedStatement.setInt(4, account.getCurrency());
             preparedStatement.setString(5, account.getDescription());
 
             int affectedRows = preparedStatement.executeUpdate();
@@ -114,9 +114,9 @@ public class AccountDao implements Dao<Account, Integer> {
         {
 
             preparedStatement.setInt(1, account.getNumberAccount());
-            preparedStatement.setInt(2, account.getPersonID());
+            preparedStatement.setInt(2, account.getPerson());
             preparedStatement.setBigDecimal(3, account.getBalance());
-            preparedStatement.setInt(4, account.getCurrencyID());
+            preparedStatement.setInt(4, account.getCurrency());
             preparedStatement.setString(5, account.getDescription());
             preparedStatement.setLong(6, account.getId());
 
@@ -165,7 +165,7 @@ public class AccountDao implements Dao<Account, Integer> {
             return list;
         }
         catch (SQLException exept) {
-            throw new RuntimeException(exept);
+            throw new DaoException(exept);
         }
     }
 

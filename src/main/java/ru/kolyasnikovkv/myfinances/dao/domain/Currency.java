@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class Currency {
     private int id;
-    private String nameOfCurrency;
+    private String name;
 }

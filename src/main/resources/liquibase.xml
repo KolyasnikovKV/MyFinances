@@ -26,56 +26,65 @@
             </column>
         </createTable>
 
-        <!--<createTable tableName="user_role">-->
-            <!--<column name="user_id" type="bigint">-->
-                <!--<constraints nullable="false" foreignKeyName="fk_user_role_user_id" references="users(id)"/>-->
-            <!--</column>-->
-            <!--<column name="role" type="varchar(255)">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-        <!--</createTable>-->
+        <createTable tableName="currency">
+            <column name="id" type="bigint">
+                <constraints unique="true" nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
-        <!--<createTable tableName="account">-->
-            <!--<column name="id" type="serial" autoIncrement="true">-->
-                <!--<constraints unique="true" nullable="false" primaryKey="true"/>-->
-            <!--</column>-->
-            <!--<column name="name" type="varchar(255)">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="owner_id" type="bigint">-->
-                <!--<constraints nullable="false" foreignKeyName="fk_users_id" references="users(id)" deleteCascade="true"/>-->
-            <!--</column>-->
-            <!--<column name="balance" type="decimal(11, 2)" defaultValue="0">-->
-            <!--</column>-->
-        <!--</createTable>-->
+        <createTable tableName="account">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints unique="true" nullable="false" primaryKey="true"/>
+            </column>
+            <column name="number_account" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="person_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_person_id" references="person(id)" deleteCascade="true"/>
+            </column>
+            <column name="balance" type="decimal(11, 2)" defaultValue="0">
+            </column>
+            <column name="currency_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_currency_id" references="currency(id)"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
-        <!--<createTable tableName="transaction">-->
-            <!--<column name="id" type="serial" autoIncrement="true">-->
-                <!--<constraints unique="true" nullable="false" primaryKey="true"/>-->
-            <!--</column>-->
-            <!--<column name="amount" type="decimal(11, 2)">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="account_from" type="bigint">-->
-                <!--<constraints foreignKeyName="fk_account_from" references="account(id)" nullable="true"-->
-                             <!--deferrable="true"/>-->
-            <!--</column>-->
-            <!--<column name="account_to" type="bigint">-->
-                <!--<constraints foreignKeyName="fk_account_to" references="account(id)" nullable="true"/>-->
-            <!--</column>-->
-            <!--<column name="date" type="date">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-        <!--</createTable>-->
+        <createTable tableName="transaction">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints unique="true" nullable="false" primaryKey="true"/>
+            </column>
+            <column name="amount" type="decimal(11, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_from" type="bigint">
+                <constraints foreignKeyName="fk_account_from" references="account(id)" nullable="true"
+                             deferrable="true"/>
+            </column>
+            <column name="account_to" type="bigint">
+                <constraints foreignKeyName="fk_account_to" references="account(id)" nullable="true"/>
+            </column>
+            <column name="date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_category_id" references="category(id)"/>
+            </column>
+        </createTable>
 
-        <!--<createTable tableName="category">-->
-            <!--<column name="id" type="serial" autoIncrement="true">-->
-                <!--<constraints unique="true" nullable="false" primaryKey="true"/>-->
-            <!--</column>-->
-            <!--<column name="name" type="varchar(255)">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-        <!--</createTable>-->
+        <createTable tableName="category">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints unique="true" nullable="false" primaryKey="true"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
         <!--<createTable tableName="transaction_category">-->
             <!--<column name="transaction_id" type="bigint">-->

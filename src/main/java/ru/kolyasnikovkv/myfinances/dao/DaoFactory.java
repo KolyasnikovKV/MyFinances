@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class DaoFactory {
     private static DataSource dataSource;
     private static PersonDao personDao;
-   /* private static CategorieDao categorieDao;
+   /* private static CategoryDao categorieDao;
     private static CurrencyDao currencyDao;
     private static TransactionDao transactionDao;
     private static AccountDao accountDao;*/
