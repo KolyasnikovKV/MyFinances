@@ -26,8 +26,8 @@ public class AccountDao implements Dao<Account, Integer> {
                 return getAccount(rs, account);
             }
         }
-        catch (SQLException exept) {
-            throw new DaoException(exept);
+        catch (SQLException except) {
+            throw new DaoException(except);
         }
         return account;
     }
@@ -68,8 +68,8 @@ public class AccountDao implements Dao<Account, Integer> {
                 list.add(getAccount(rs, account));
             }
         }
-        catch (SQLException exept) {
-            throw new DaoException(exept);
+        catch (SQLException except) {
+            throw new DaoException(except);
         }
 
         return list;
@@ -144,8 +144,8 @@ public class AccountDao implements Dao<Account, Integer> {
                     throw new SQLException("Creating transaction failed, no rows affected");
                 }
             }
-        catch (SQLException exept) {
-                throw new DaoException(exept);
+        catch (SQLException except) {
+                throw new DaoException(except);
             }
     }
 
@@ -164,12 +164,12 @@ public class AccountDao implements Dao<Account, Integer> {
             }
             return list;
         }
-        catch (SQLException exept) {
-            throw new DaoException(exept);
+        catch (SQLException except) {
+            throw new DaoException(except);
         }
     }
 
-    public List<Account> findByPersonId(Long personId, Connection connection) {
+    public List<Account> findByPerson(Long personId, Connection connection) {
         List<Account> list = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From account " +
@@ -185,8 +185,8 @@ public class AccountDao implements Dao<Account, Integer> {
             }
             return list;
         }
-        catch (SQLException exept) {
-            throw new RuntimeException(exept);
+        catch (SQLException except) {
+            throw new RuntimeException(except);
         }
     }
 
@@ -205,8 +205,8 @@ public class AccountDao implements Dao<Account, Integer> {
                 count++;
             }
             return count;
-        } catch (SQLException exept) {
-            throw new RuntimeException(exept);
+        } catch (SQLException except) {
+            throw new RuntimeException(except);
         }
 
     }

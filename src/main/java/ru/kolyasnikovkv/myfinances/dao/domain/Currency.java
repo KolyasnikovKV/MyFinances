@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Currency {
-    private int id;
+    private Long id;
     private String name;
 }

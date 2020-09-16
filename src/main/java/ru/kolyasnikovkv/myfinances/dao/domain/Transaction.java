@@ -8,10 +8,10 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class Transaction {
-    private int id;
-    private int accountFrom;
-    private int accountTo;
+    private Long id;
+    private Long accountFrom;
+    private Long accountTo;
     private BigDecimal ammount;
     private String  date;
-    private int category;
+    private Long category;
 }

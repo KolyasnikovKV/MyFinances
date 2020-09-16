@@ -40,8 +40,8 @@ public class PersonDao implements Dao<Person, Integer> {
                 return getPersonаFromResultSet(rs, person);
             }
         }
-        catch (SQLException exept) {
-            throw new RuntimeException(exept);
+        catch (SQLException except) {
+            throw new RuntimeException(except);
         }
         return person;
     }
@@ -61,8 +61,8 @@ public class PersonDao implements Dao<Person, Integer> {
             }
 
         }
-        catch (SQLException exept) {
-            throw new RuntimeException(exept);
+        catch (SQLException except) {
+            throw new RuntimeException(except);
         }
         return person;
     }
@@ -150,8 +150,8 @@ public class PersonDao implements Dao<Person, Integer> {
                 throw new SQLException("Creating transaction failed, no rows affected");
             }
         }
-        catch (SQLException exept) {
-            throw new DaoException(exept);
+        catch (SQLException except) {
+            throw new DaoException(except);
         }
     }
 }

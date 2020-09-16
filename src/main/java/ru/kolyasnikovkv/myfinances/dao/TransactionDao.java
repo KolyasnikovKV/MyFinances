@@ -1,51 +1,56 @@
 package ru.kolyasnikovkv.myfinances.dao;
 
-import ru.titov.s05.dao.domain.Transaction;
+
+import ru.kolyasnikovkv.myfinances.dao.domain.Transaction;
+import ru.kolyasnikovkv.myfinances.exception.DaoException;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.titov.s05.dao.DaoFactory.getConnection;
+import static ru.kolyasnikovkv.myfinances.dao.DaoFactory.getConnection;
 
-public class TransactionDao implements Dao<Transaction, Integer> {
+
+public class TransactionDao implements Dao<Transaction, Long> {
 
     private Transaction getTransaction(ResultSet rs, Transaction transaction) throws SQLException {
 
-        transaction.setId(rs.getInt(1));
-        transaction.setAccountID(rs.getInt(2));
-        transaction.setSum(rs.getBigDecimal(3));
-        transaction.setDate(rs.getString(4));
-        transaction.setCategorieID(rs.getInt(5));
+        transaction.setId(rs.getLong(1));
+        transaction.setAccountFrom(rs.getLong(2));
+        transaction.setAccountTo(rs.getLong(3));
+        transaction.setAmmount(rs.getBigDecimal(4));
+        transaction.setDate(rs.getString(5));
+        transaction.setCategory(rs.getLong(6));
 
         return transaction;
     }
 
     private void setTransaction(PreparedStatement preparedStatement, Transaction transaction) throws SQLException {
-        preparedStatement.setInt(1, transaction.getAccountID());
-        preparedStatement.setBigDecimal(2, transaction.getSum());
+        preparedStatement.setLong(1, transaction.getAccountFrom());
+        preparedStatement.setLong(1, transaction.getAccountTo());
+        preparedStatement.setBigDecimal(2, transaction.getAmmount());
         preparedStatement.setString(3,  transaction.getDate());
-        preparedStatement.setInt(4, transaction.getCategorieID());
+        preparedStatement.setLong(4, transaction.getCategory());
     }
 
     @Override
-    public Transaction findById(Integer id, Connection connection) {
-        Transaction transaction = new Transaction();
+    public Transaction findById(Long id, Connection connection) {
+        Transaction transaction = null;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction" +
                      "WHERE (transaction.id = ?)")) {
 
-            preparedStatement.setInt(1, id);
+            preparedStatement.setLong(1, id);
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
                 return getTransaction(rs, transaction);
             }
         } catch (SQLException exept) {
-            throw new RuntimeException(exept);
+            throw new DaoException(exept);
         }
 
-        return null;
+        return transaction;
     }
 
     @Override
@@ -62,7 +67,7 @@ public class TransactionDao implements Dao<Transaction, Integer> {
                 list.add(getTransaction(rs, transaction));
             }
         } catch (SQLException exept) {
-            throw new RuntimeException(exept);
+            throw new DaoException(exept);
         }
 
         return list;
@@ -71,72 +76,75 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     @Override
     public Transaction insert(Transaction transaction, Connection connection) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO transaction(" +
-                     "account_id, sum, date, categorie_id) VALUES( ?, ?, ?, ? )", Statement.RETURN_GENERATED_KEYS);) {
+                     "account_from, account_to, ammount, date, categorie) VALUES( ?, ?, ?, ? )", Statement.RETURN_GENERATED_KEYS);) {
 
             setTransaction(preparedStatement, transaction);
-            preparedStatement.executeUpdate();
 
-            ResultSet rs = preparedStatement.getGeneratedKeys();
-
-            if (rs.next()) {
-                int id = rs.getInt(1); //вставленный ключ
-                transaction.setId(id);
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating transaction failed, no rows affected");
             }
 
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    transaction.setId(generatedKeys.getLong(1));
+                } else {
+                    throw new SQLException("Creating transaction failed, no ID obtained");
+                }
+            }
 
-            return transaction;
-
+           return transaction;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
 
     @Override
     public Transaction update(Transaction transaction, Connection connection) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE transaction SET " +
-                     "account_id = ?, sum = ?, date = ?, categorie_id = ? " +
+                     "account_from = ?, account_to = ?, ammount = ?, date = ?, category_id = ? " +
                      "WHERE transaction.id = ?");) {
-            preparedStatement.setInt(5, transaction.getId());
+            preparedStatement.setLong(5, transaction.getId());
             setTransaction(preparedStatement, transaction);
 
-
-            if (preparedStatement.executeUpdate() > 0) {
-                return transaction;
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0){
+                throw new SQLException("Creating transaction failed, no rows affected");
             }
 
+            return transaction;
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
-        return null;
+
     }
 
     @Override
-    public boolean delete(Integer id, Connection connection) {
+    public void delete(Long id, Connection connection) {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM  transaction WHERE (transaction.id = ?)")) {
 
+            preparedStatement.setLong(1, id);
 
-            preparedStatement.setInt(1, id);
-
-            if (preparedStatement.executeUpdate() > 0) {
-                return true;
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0){
+                throw new SQLException("Creating transaction failed, no rows affected");
             }
         } catch (SQLException exept) {
-            throw new RuntimeException(exept);
+            throw new DaoException(exept);
         }
-
-        return false;
     }
 
 
-    public List<Transaction> findByAccountId(int accountId, Connection connection) {
+    public List<Transaction> findByAccountId(Long accountId, Connection connection) {
         List<Transaction> list = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction " +
-                     "WHERE transaction.account_id = ?")) {
+                     "WHERE transaction.account_from = ?")) {
 
-            preparedStatement.setInt(1, accountId);
+            preparedStatement.setLong(1, accountId);
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
@@ -146,17 +154,17 @@ public class TransactionDao implements Dao<Transaction, Integer> {
             return list;
 
         } catch (SQLException exept) {
-            throw new RuntimeException(exept);
+            throw new DaoException(exept);
         }
     }
 
-    public List<Transaction> findByAccountIdAndData(int accountId, Date date, Connection connection) {
+    public List<Transaction> findByAccountIdAndData(Long accountId, Date date, Connection connection) {
         List<Transaction> list = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction " +
-                     "WHERE transaction.account_id = ? and transaction.date = ?")) {
+                     "WHERE transaction.account_from = ? and transaction.date = ?")) {
 
-            preparedStatement.setInt(1, accountId);
+            preparedStatement.setLong(1, accountId);
             preparedStatement.setDate(2, date);
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -165,20 +173,20 @@ public class TransactionDao implements Dao<Transaction, Integer> {
                 list.add(getTransaction(rs, transaction));
             }
         } catch (SQLException exept) {
-            throw new RuntimeException(exept);
+            throw new DaoException(exept);
         }
 
         return list;
     }
 
-    public List<Transaction> findByAccountIdCategorieId(int accountId, int categorieId, Connection connection) {
+    public List<Transaction> findByAccountIdCategorieId(Long accountId, Long categorieId, Connection connection) {
         List<Transaction> list = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction " +
-                     "WHERE transaction.account_id = ? and transaction.categorie_id = ?")) {
+                     "WHERE transaction.account_from = ? and transaction.category_id = ?")) {
 
-            preparedStatement.setInt(1, accountId);
-            preparedStatement.setInt(2, categorieId);
+            preparedStatement.setLong(1, accountId);
+            preparedStatement.setLong(2, categorieId);
 
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -187,19 +195,19 @@ public class TransactionDao implements Dao<Transaction, Integer> {
                 list.add(getTransaction(rs, transaction));
             }
         } catch (SQLException exept) {
-            throw new RuntimeException(exept);
+            throw new DaoException(exept);
         }
 
         return list;
     }
 
-    public List<Transaction> findByAccountIdCategorieIdDate(int accountId, int categorieId, Date date, Connection connection) {
+    public List<Transaction> findByAccountIdCategorieIdDate(Long accountId, Long categorieId, Date date, Connection connection) {
         List<Transaction> list = new ArrayList<>();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction WHERE transaction.account_id =? and transaction.categorie_id = ? and transaction.date = ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction WHERE transaction.account_from =? and transaction.category_id = ? and transaction.date = ?")) {
 
-            preparedStatement.setInt(1, accountId);
-            preparedStatement.setInt(2, categorieId);
+            preparedStatement.setLong(1, accountId);
+            preparedStatement.setLong(2, categorieId);
             preparedStatement.setDate(3, date);
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -208,7 +216,7 @@ public class TransactionDao implements Dao<Transaction, Integer> {
                 list.add(getTransaction(rs, transaction));
             }
         } catch (SQLException exept) {
-            throw new RuntimeException(exept);
+            throw new DaoException(exept);
         }
 
         return list;

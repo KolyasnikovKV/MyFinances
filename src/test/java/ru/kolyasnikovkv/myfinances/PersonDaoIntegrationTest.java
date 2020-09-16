@@ -110,8 +110,8 @@ public class PersonDaoIntegrationTest {
             preparedStatement.executeUpdate();
             connection.close();
 
-        } catch (SQLException exept) {
-            throw new RuntimeException(exept);
+        } catch (SQLException except) {
+            throw new RuntimeException(except);
         }
     }
 }

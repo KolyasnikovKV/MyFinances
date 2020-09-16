@@ -1,31 +1,31 @@
 package ru.kolyasnikovkv.myfinances.dao;
 
-import ru.titov.s05.dao.Dao;
-import ru.titov.s05.dao.domain.Currency;
+import ru.kolyasnikovkv.myfinances.dao.domain.Currency;
+import ru.kolyasnikovkv.myfinances.exception.DaoException;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.titov.s05.dao.DaoFactory.getConnection;
+import static ru.kolyasnikovkv.myfinances.dao.DaoFactory.getConnection;
 
 public class CurrencyDao implements Dao<Currency, Integer> {
 
     private Currency getCurrency(ResultSet rs, Currency currency) throws SQLException {
-        currency.setId(rs.getInt(1));
-        currency.setNameOfCurrency(rs.getString(2));
+        currency.setId(rs.getLong(1));
+        currency.setName(rs.getString(2));
 
         return currency;
     }
 
     @Override
-    public Currency findById(Integer id, Connection connection) {
-        Currency currency = new Currency();
+    public Currency findById(Long id, Connection connection) {
+        Currency currency = null;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From currency " +
                      "WHERE (currency.id = ?)")) {
 
-            preparedStatement.setInt(1, id);
+            preparedStatement.setLong(1, id);
             ResultSet rs = preparedStatement.executeQuery();
 
 
@@ -33,11 +33,11 @@ public class CurrencyDao implements Dao<Currency, Integer> {
                 return getCurrency(rs, currency);
             }
         }
-        catch (SQLException exept) {
-            throw new RuntimeException(exept);
+        catch (SQLException except) {
+            throw new DaoException(except);
         }
 
-        return null;
+        return currency;
     }
 
     @Override
@@ -54,8 +54,8 @@ public class CurrencyDao implements Dao<Currency, Integer> {
                 list.add(getCurrency(rs, currency));
             }
         }
-        catch (SQLException exept) {
-            throw new RuntimeException(exept);
+        catch (SQLException except) {
+            throw new DaoException(except);
         }
 
         return list;
@@ -68,21 +68,25 @@ public class CurrencyDao implements Dao<Currency, Integer> {
                      "name_of_currency) VALUES(?)", Statement.RETURN_GENERATED_KEYS)) {
 
 
-            preparedStatement.setString(1, currency.getNameOfCurrency());
-            preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
+            preparedStatement.setString(1, currency.getName());
 
-            if (rs.next()) {
-                int id = rs.getInt(1); //вставленный ключ
-                currency.setId(id);
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating transaction failed, no rows affected");
             }
 
-                return currency;
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    currency.setId(generatedKeys.getLong(1));
+                } else {
+                    throw new SQLException("Creating transaction failed, no ID obtained");
+                }
+            }
 
-
+            return currency;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e); // кидать свое исключение и ловить в тестах
+            throw new DaoException(e); // кидать свое исключение и ловить в тестах
         }
 
     }
@@ -95,51 +99,56 @@ public class CurrencyDao implements Dao<Currency, Integer> {
                      "name_of_currency = ? " +
                      "WHERE currency.id = ?");)
         {
-            preparedStatement.setInt(2, currency.getId());
-            preparedStatement.setString(1, currency.getNameOfCurrency());
+            preparedStatement.setLong(2, currency.getId());
+            preparedStatement.setString(1, currency.getName());
 
-            if (preparedStatement.executeUpdate() > 0) {
-                return currency;
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0){
+                throw new SQLException("Creating transaction failed, no rows affected");
             }
 
+            return currency;
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
-        return null;
     }
 
     @Override
-    public boolean delete(Integer id, Connection connection) {
+    public void delete(Long id, Connection connection) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM currency WHERE (currency.id = ?)")) {
 
-            preparedStatement.setInt(1, id);
+            preparedStatement.setLong(1, id);
 
-            if (preparedStatement.executeUpdate() > 0) {
-                return true;
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0){
+                throw new SQLException("Creating transaction failed, no rows affected");
             }
         }
-        catch (SQLException exept) {
-            throw new RuntimeException(exept);
+        catch (SQLException except) {
+            throw new DaoException(except);
         }
-        return false;
     }
 
-    public Currency findByNameCurrency(Currency currency, Connection connection) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From currency " +
-                     "WHERE (UPPER(currency.name_of_currency) = UPPER(?))")) {
+    public Currency findByName(String name, Connection connection) {
 
-            preparedStatement.setString(1, currency.getNameOfCurrency());
+        Currency currency = null;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From currency " +
+                     "WHERE (UPPER(currency.name) = UPPER(?))")) {
+
+            preparedStatement.setString(1, name);
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
                 return getCurrency(rs, currency);
             }
         }
-        catch (SQLException exept) {
-            throw new RuntimeException(exept);
+        catch (SQLException except) {
+            throw new DaoException(except);
         }
 
-         return null;
+         return currency;
 
     }
 }

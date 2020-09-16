@@ -1,25 +1,32 @@
 package ru.kolyasnikovkv.myfinances.dao;
 
-public class CategoryDao{
-//public class CategoryDao implements Dao<Category, Integer> {
+import ru.kolyasnikovkv.myfinances.dao.domain.Category;
+import ru.kolyasnikovkv.myfinances.exception.DaoException;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-  /*  @Override
+import static ru.kolyasnikovkv.myfinances.dao.DaoFactory.getConnection;
+
+public class CategoryDao implements Dao<Category, Integer> {
+
+ @Override
     public Category findById(Long id, Connection connection) {
         Category category = null;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From category " +
                      "WHERE (category.id = ?)")) {
 
-            preparedStatement.setInt(1, id);
+            preparedStatement.setLong(1, id);
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
                 return getCategory(rs, category);
             }
         }
-        catch (SQLException exept) {
-            throw new DaoException(exept);
+        catch (SQLException except) {
+            throw new DaoException(except);
         }
 
         return category;
@@ -39,8 +46,8 @@ public class CategoryDao{
                 list.add(getCategory(rs, category));
             }
         }
-        catch (SQLException exept) {
-            throw new DaoException(exept);
+        catch (SQLException except) {
+            throw new DaoException(except);
         }
 
         return list;
@@ -60,13 +67,6 @@ public class CategoryDao{
         {
 
             preparedStatement.setString(1, category.getDescription());
-            preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
-
-            if (rs.next()) {
-                Long id = rs.getLong(1); //вставленный ключ
-                category.setId(id);
-            }
 
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
@@ -103,11 +103,11 @@ public class CategoryDao{
                 throw new SQLException("Creating transaction failed, no rows affected");
             }
 
+            return category;
 
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return null;
     }
 
     @Override
@@ -122,9 +122,9 @@ public class CategoryDao{
             }
 
         }
-        catch (SQLException exept) {
-            throw new DaoException(exept);
+        catch (SQLException except) {
+            throw new DaoException(except);
         }
 
-    }*/
+    }
 }
