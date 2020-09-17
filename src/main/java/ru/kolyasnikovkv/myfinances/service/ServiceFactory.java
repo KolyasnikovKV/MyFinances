@@ -81,7 +81,7 @@ public class ServiceFactory {
         return currencyService;
     }
 
-    public static CategoryService getCategorieService() {
+    public static CategoryService getCategoryService() {
         if (categorieService == null) {
             categorieService = new CategoryService(DaoFactory.getCategoryDao(), categorieConverter);
         }
