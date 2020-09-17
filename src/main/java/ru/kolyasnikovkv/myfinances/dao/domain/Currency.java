@@ -5,7 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Currency {
-    private Long id;
+public class Currency extends AbstractEntity{
     private String name;
 }

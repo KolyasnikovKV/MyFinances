@@ -8,8 +8,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class Account {
-    private Long id;
+public class Account extends AbstractEntity{
     private Long numberAccount;
     private Long person;
     private BigDecimal balance;

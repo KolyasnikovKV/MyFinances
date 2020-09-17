@@ -7,8 +7,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class Transaction {
-    private Long id;
+public class Transaction extends AbstractEntity {
     private Long accountFrom;
     private Long accountTo;
     private BigDecimal ammount;

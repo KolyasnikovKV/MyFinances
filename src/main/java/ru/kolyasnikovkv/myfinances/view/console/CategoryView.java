@@ -12,8 +12,6 @@ import java.util.Scanner;
 public class CategoryView {
     private final CategoryService categoryService = ServiceFactory.getCategoryService();
 
-
-
     public CategoryDto createNewCategory(CategoryDto categoryDto) throws SQLException {
 
         if (categoryService.checkDescription(categoryDto, DaoFactory.getConnection())) {

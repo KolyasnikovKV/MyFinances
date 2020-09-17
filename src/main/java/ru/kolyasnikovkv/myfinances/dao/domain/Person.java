@@ -7,8 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Person {
-    private Long id;
+public class Person extends AbstractEntity{
     private String email;
     private String password;
     private String nick;

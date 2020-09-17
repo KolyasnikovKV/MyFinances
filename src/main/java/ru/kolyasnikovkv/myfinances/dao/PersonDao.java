@@ -1,6 +1,5 @@
 package ru.kolyasnikovkv.myfinances.dao;
 
-
 import ru.kolyasnikovkv.myfinances.dao.domain.Person;
 import ru.kolyasnikovkv.myfinances.exception.DaoException;
 
@@ -9,82 +8,60 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonDao implements Dao<Person, Integer> {
+public class PersonDao extends AbstractDao<Person, Integer> {
+
     private final DataSource dataSource;
+    protected final RowMapper<Person> rowMapper;
+    private final static String TABLE_NAME = "person";
 
     public PersonDao(DataSource dataSource){
+        super(new PersonRowMapper(), TABLE_NAME);
+        rowMapper = new PersonRowMapper();
         this.dataSource = dataSource;
-    }
+   }
 
-    private Person getPersonаFromResultSet(ResultSet rs, Person person) throws SQLException {
-
-        person.setId(rs.getLong("id"));
-        person.setEmail(rs.getString("email"));
-        person.setPassword(rs.getString("password"));
-        person.setNick(rs.getString("nick"));
-        person.setFullName(rs.getString("fullName"));
-
-        return person;
-    }
-
-    public Person findById(Long id, Connection connection){
-        Person person = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From person "  +
-                "WHERE (person.id =  ?)")) {
-
-            preparedStatement.setLong(1, id);
-            ResultSet rs = preparedStatement.executeQuery();
-
-            if (rs.next()) {
-                person = new Person();
-                return getPersonаFromResultSet(rs, person);
+    @Override
+    String getSQL(OperationSql type){
+        switch (type) {
+            case SQL_SELECT_ID: {
+                return "Select * From person WHERE (person.id =  ?)";
             }
-        }
-        catch (SQLException except) {
-            throw new DaoException(except);
-        }
-        return person;
-    }
-
-    public Person findByMail(String mail, Connection connection) {
-        Person person = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From person " +
-                "WHERE UPPER(person.e_mail) = UPPER(?)"))
-        {
-
-            preparedStatement.setString(1, mail);
-            ResultSet rs = preparedStatement.executeQuery();
-
-            if (rs.next()) {
-                person = new Person();
-                return getPersonаFromResultSet(rs, person);
+            case SQL_SELECT_ALL: {
+                return "SELECT * FROM person";
             }
-
-        }
-        catch (SQLException except) {
-            throw new DaoException(except);
-        }
-        return person;
-    }
-
-    public List<Person> findAll(){
-
-        List<Person> list = new ArrayList<Person>();
-        try(Connection connection = dataSource.getConnection();
-        Statement statement = connection.createStatement()){
-            ResultSet rs = statement.executeQuery("SELECT * FROM person");
-            while (rs.next()){
-                Person person = new Person();
-                list.add(getPersonаFromResultSet(rs, person));
+            case SQL_INSERT: {
+                return "INSERT INTO person(email, password, nick, fullname) VALUES(?, ?, ?, ?)";
             }
+            case SQL_UPDATE: {
+                return "SELECT * FROM person WHERE id=?";
+            }
+            case SQL_DELETE: {
+                return "DELETE FROM person WHERE (person.id = ?)";
+            }
+            default: return "";
         }
-        catch (SQLException except){
-            throw new DaoException(except);
-        }
-        return list;
     }
 
-    public Person insert(Person person, Connection connection){
+    private static class PersonRowMapper implements RowMapper<Person> {
+        public Person mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Person person = new Person();
+            person.setId(rs.getLong("id"));
+            person.setEmail(rs.getString("email"));
+            person.setPassword(rs.getString("password"));
+            person.setNick(rs.getString("nick"));
+            person.setFullName(rs.getString("fullName"));
+            return person;
+        }
+
+        public void preparedStatement(Person person, PreparedStatement preparedStatement) throws SQLException{
+            preparedStatement.setString(1, person.getEmail());
+            preparedStatement.setString(2, person.getPassword());
+            preparedStatement.setString(3, person.getNick());
+            preparedStatement.setString(4, person.getFullName());
+        }
+    }
+
+    /*public Person insert(Person person, Connection connection){
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO person(" +
                         "email, password, nick, fullname) VALUES(?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS)) {
@@ -113,6 +90,60 @@ public class PersonDao implements Dao<Person, Integer> {
         return person;
     }
 
+    public Person findById(Long id, Connection connection){
+        Person person = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From person "  +
+                "WHERE (person.id =  ?)")) {
+
+            preparedStatement.setLong(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                person = rowMapper.mapRow(rs, 0);
+            }
+        }
+        catch (SQLException except) {
+            throw new DaoException(except);
+        }
+        return person;
+    }*/
+
+    public Person findByMail(String mail, Connection connection) {
+        Person person = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From person " +
+                "WHERE UPPER(person.e_mail) = UPPER(?)"))
+        {
+
+            preparedStatement.setString(1, mail);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                person = rowMapper.mapRow(rs, 0);
+            }
+
+        }
+        catch (SQLException except) {
+            throw new DaoException(except);
+        }
+        return person;
+    }
+
+    public List<Person> findAll(){
+
+        List<Person> list = new ArrayList<Person>();
+        try(Connection connection = dataSource.getConnection();
+        Statement statement = connection.createStatement()){
+            ResultSet rs = statement.executeQuery("SELECT * FROM person");
+            while (rs.next()){
+                Person person = new Person();
+                list.add(rowMapper.mapRow(rs, 0));
+            }
+        }
+        catch (SQLException except){
+            throw new DaoException(except);
+        }
+        return list;
+    }
 
     public Person update(Person person, Connection connection){
 
@@ -167,8 +198,7 @@ public class PersonDao implements Dao<Person, Integer> {
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-                person = new Person();
-                getPersonаFromResultSet(rs, person);
+                person = rowMapper.mapRow(rs, 0);
             }
 
             if (person == null) {

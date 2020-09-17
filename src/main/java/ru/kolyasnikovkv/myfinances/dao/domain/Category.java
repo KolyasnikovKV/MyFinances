@@ -5,7 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Category {
-    private Long id;
+public class Category extends AbstractEntity{
     private String description;
 }
