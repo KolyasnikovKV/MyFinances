@@ -30,6 +30,7 @@ public class CurrencyDao implements Dao<Currency, Integer> {
 
 
             if (rs.next()) {
+                currency = new Currency();
                 return getCurrency(rs, currency);
             }
         }
@@ -65,7 +66,7 @@ public class CurrencyDao implements Dao<Currency, Integer> {
     public Currency insert(Currency currency, Connection connection) {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO currency(" +
-                     "name_of_currency) VALUES(?)", Statement.RETURN_GENERATED_KEYS)) {
+                     "name) VALUES(?)", Statement.RETURN_GENERATED_KEYS)) {
 
 
             preparedStatement.setString(1, currency.getName());
@@ -96,7 +97,7 @@ public class CurrencyDao implements Dao<Currency, Integer> {
     public Currency update(Currency currency, Connection connection) {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE currency SET " +
-                     "name_of_currency = ? " +
+                     "name = ? " +
                      "WHERE currency.id = ?");)
         {
             preparedStatement.setLong(2, currency.getId());

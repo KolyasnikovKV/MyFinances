@@ -150,7 +150,7 @@ public class CurrencyDaointegrationTest {
         assertNotNull(currencyDtoFromService);
         assertEquals(currencyDto.getNameCurrency(), currencyDtoFromService.getNameCurrency());
         currencyDto = currencyConverter.currencyToCurrencyDto(
-                currencyDao.findById(currencyDtoFromService.getId(), connection));
+        currencyDao.findById(currencyDtoFromService.getId(), connection));
         assertEquals(currencyDto.getId(), currencyDtoFromService.getId());
         assertEquals(currencyDto.getNameCurrency(), currencyDtoFromService.getNameCurrency());
     }

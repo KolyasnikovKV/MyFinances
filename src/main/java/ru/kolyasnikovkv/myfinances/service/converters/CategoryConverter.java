@@ -8,39 +8,39 @@ import java.util.List;
 
 public class CategoryConverter {
 
-    public Category categoryDtoToCategory(CategoryDto categorieDto) {
+    public Category categoryDtoToCategory(CategoryDto categoryDto) {
 
-        if (categorieDto != null) {
-            Category categorie = new Category();
-            categorie.setId(categorieDto.getId());
-            categorie.setDescription(categorieDto.getDescription());
-            return categorie;
+        if (categoryDto != null) {
+            Category category = new Category();
+            category.setId(categoryDto.getId());
+            category.setDescription(categoryDto.getDescription());
+            return category;
         }
         return null;
     }
 
 
-    public CategoryDto categoryToCategoryDto(Category categorie) {
+    public CategoryDto categoryToCategoryDto(Category category) {
 
-        if (categorie != null) {
-            CategoryDto categorieDto = new CategoryDto();
-            categorieDto.setId(categorie.getId());
-            categorieDto.setDescription(categorie.getDescription());
-            return categorieDto;
+        if (category != null) {
+            CategoryDto categoryDto = new CategoryDto();
+            categoryDto.setId(category.getId());
+            categoryDto.setDescription(category.getDescription());
+            return categoryDto;
         }
         return null;
     }
 
-    public List<CategoryDto> listCategoryToListCategoryDto(List<Category> categorie) {
+    public List<CategoryDto> listCategoryToListCategoryDto(List<Category> category) {
 
-        if (categorie == null) {
+        if (category == null) {
             return null;
         }
 
         List<CategoryDto> listCategoryDto = new ArrayList<>();
         CategoryConverter converter = new CategoryConverter();
 
-        for (Category cat : categorie) {
+        for (Category cat : category) {
             listCategoryDto.add(converter.categoryToCategoryDto(cat));
         }
 

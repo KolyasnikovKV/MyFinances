@@ -32,7 +32,7 @@ public class PersonDao extends AbstractDao<Person, Integer> {
                 return "INSERT INTO person(email, password, nick, fullname) VALUES(?, ?, ?, ?)";
             }
             case SQL_UPDATE: {
-                return "UPDATE person SET e_mail = ?, password = ?, nick_name = ?, full_name = ? WHERE id = ?";
+                return "UPDATE person SET email = ?, password = ?, nick = ?, fullname = ? WHERE id = ?";
             }
             case SQL_DELETE: {
                 return "DELETE FROM person WHERE (person.id = ?)";

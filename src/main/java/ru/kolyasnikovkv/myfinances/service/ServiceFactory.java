@@ -8,12 +8,12 @@ public class ServiceFactory {
     private static UserConverter userConverter;
     private static TransactionConverter transactionConverter;
     private static CurrencyConverter currencyConverter;
-    private static CategoryConverter categorieConverter;
+    private static CategoryConverter categoryConverter;
     private static AccountConverter accountConverter;
     private static DigestService digestService;
     private static SecurityService securityService;
     private static CurrencyService currencyService;
-    private static CategoryService categorieService;
+    private static CategoryService categoryService;
     private static TransactionService transactionService;
     private static  AccountService accountService;
     private static PersonService personService;
@@ -42,12 +42,12 @@ public class ServiceFactory {
         return currencyConverter;
     }
 
-    public static CategoryConverter getCategorieConverter() {
-        if (categorieConverter == null) {
-            categorieConverter = new CategoryConverter();
+    public static CategoryConverter getCategoryConverter() {
+        if (categoryConverter == null) {
+            categoryConverter = new CategoryConverter();
         }
 
-        return categorieConverter;
+        return categoryConverter;
     }
 
     public static AccountConverter getAccountConverter() {
@@ -82,11 +82,11 @@ public class ServiceFactory {
     }
 
     public static CategoryService getCategoryService() {
-        if (categorieService == null) {
-            categorieService = new CategoryService(DaoFactory.getCategoryDao(), categorieConverter);
+        if (categoryService == null) {
+            categoryService = new CategoryService(DaoFactory.getCategoryDao(), categoryConverter);
         }
 
-        return categorieService;
+        return categoryService;
     }
 
     public static TransactionService getTransactionService() {

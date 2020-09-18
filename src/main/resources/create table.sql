@@ -6,14 +6,14 @@ create table person(
                      full_name varchar(60)
 );
 
-create table categorie (
+create table category (
                          id serial primary key not null,
                          description varchar(25) not null
 );
 
 create table currency (
                         id serial primary key not null,
-                        name_of_currency varchar(20) not null
+                        name varchar(20) not null
 );
 
 
@@ -31,7 +31,7 @@ create table transaction (
                            account_id int not null references account(id),
                            sum money not null,
                            date date not null,
-                           categorie_id int not null references categorie(id)
+                           category_id int not null references category(id)
 );
 
 

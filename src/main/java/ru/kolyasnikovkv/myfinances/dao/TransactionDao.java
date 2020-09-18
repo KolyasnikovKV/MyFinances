@@ -44,6 +44,7 @@ public class TransactionDao implements Dao<Transaction, Long> {
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
+                transaction = new Transaction();
                 return getTransaction(rs, transaction);
             }
         } catch (SQLException exept) {
@@ -76,7 +77,7 @@ public class TransactionDao implements Dao<Transaction, Long> {
     @Override
     public Transaction insert(Transaction transaction, Connection connection) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO transaction(" +
-                     "account_from, account_to, ammount, date, categorie) VALUES( ?, ?, ?, ? )", Statement.RETURN_GENERATED_KEYS);) {
+                     "account_from, account_to, ammount, date, category) VALUES( ?, ?, ?, ? )", Statement.RETURN_GENERATED_KEYS);) {
 
             setTransaction(preparedStatement, transaction);
 
@@ -179,14 +180,14 @@ public class TransactionDao implements Dao<Transaction, Long> {
         return list;
     }
 
-    public List<Transaction> findByAccountIdCategorieId(Long accountId, Long categorieId, Connection connection) {
+    public List<Transaction> findByAccountIdCategoryId(Long accountId, Long categoryId, Connection connection) {
         List<Transaction> list = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction " +
                      "WHERE transaction.account_from = ? and transaction.category_id = ?")) {
 
             preparedStatement.setLong(1, accountId);
-            preparedStatement.setLong(2, categorieId);
+            preparedStatement.setLong(2, categoryId);
 
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -201,13 +202,13 @@ public class TransactionDao implements Dao<Transaction, Long> {
         return list;
     }
 
-    public List<Transaction> findByAccountIdCategorieIdDate(Long accountId, Long categorieId, Date date, Connection connection) {
+    public List<Transaction> findByAccountIdCategoryIdDate(Long accountId, Long categoryId, Date date, Connection connection) {
         List<Transaction> list = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction WHERE transaction.account_from =? and transaction.category_id = ? and transaction.date = ?")) {
 
             preparedStatement.setLong(1, accountId);
-            preparedStatement.setLong(2, categorieId);
+            preparedStatement.setLong(2, categoryId);
             preparedStatement.setDate(3, date);
             ResultSet rs = preparedStatement.executeQuery();
 

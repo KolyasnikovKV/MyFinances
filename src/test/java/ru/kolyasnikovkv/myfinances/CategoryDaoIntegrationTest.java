@@ -55,16 +55,11 @@ public class CategoryDaoIntegrationTest {
         CategoryDto categoryDto = new CategoryDto();
         Connection connection = DaoFactory.getConnection();
 
-
         categoryDto.setId(-1L);
         categoryDto.setDescription("");
-
         assertEquals(-1L, (long) categoryDto.getId());
-
         CategoryDto categoryDtoFromService = subj.createNewCategory(categoryDto, connection);
-
         assertNotNull(categoryDto);
-
         assertNull(categoryDtoFromService);
         connection.close();
     }
@@ -74,12 +69,10 @@ public class CategoryDaoIntegrationTest {
         CategoryDto categoryDto = new CategoryDto();
         Connection connection = DaoFactory.getConnection();
 
-
         categoryDto.setId(-1L);
         categoryDto.setDescription("Грвн");
 
         assertEquals(-1L, (long) categoryDto.getId());
-
         CategoryDto categoryDtoFromService = subj.createNewCategory(categoryDto, connection);
 
         assertNotNull(categoryDtoFromService);
@@ -108,13 +101,11 @@ public class CategoryDaoIntegrationTest {
         assertNotNull(categoryDtoFromService);
         assertEquals(categoryDto.getDescription(), categoryDtoFromService.getDescription());
 
-
         categoryDto.setDescription("Euro");
         categoryDto.setId(100L);
         categoryDtoFromService = subj.updateCategory(categoryDto, connection);
 
         assertNull(categoryDtoFromService);
-
         connection.close();
     }
 
@@ -146,7 +137,6 @@ public class CategoryDaoIntegrationTest {
 
         CategoryDto categoryDto = new CategoryDto();
         Connection connection = DaoFactory.getConnection();
-
 
         categoryDto.setId(-1L);
         categoryDto.setDescription("USD");

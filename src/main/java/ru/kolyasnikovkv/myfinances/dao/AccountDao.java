@@ -23,6 +23,7 @@ public class AccountDao implements Dao<Account, Integer> {
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
+                account = new Account();
                 return getAccount(rs, account);
             }
         }
