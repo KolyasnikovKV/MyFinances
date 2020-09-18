@@ -104,7 +104,7 @@ abstract class AbstractDao<Domain extends AbstractEntity, Id> implements Dao<Dom
 
     public void delete(Long id, Connection connection){
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(getSQL(SQL_UPDATE)))
+        try (PreparedStatement preparedStatement = connection.prepareStatement(getSQL(SQL_DELETE)))
         {
             preparedStatement.setLong(1, id);
 

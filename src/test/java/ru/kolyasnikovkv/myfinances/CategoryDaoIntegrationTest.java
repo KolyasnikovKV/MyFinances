@@ -29,10 +29,7 @@ public class CategoryDaoIntegrationTest {
         System.setProperty("jdbcPassword", "");
 
         subj = new CategoryService(categoryDao, categoryConverter);
-
-
     }
-
 
     @Test
     public void categoryInsert_ok() throws SQLException {
@@ -40,16 +37,11 @@ public class CategoryDaoIntegrationTest {
         CategoryDto categoryDto = new CategoryDto();
         Connection connection = DaoFactory.getConnection();
 
-
         categoryDto.setId(-1L);
         categoryDto.setDescription("Наличка");
-
         assertEquals(-1L, (long) categoryDto.getId()); //ключ ещё не сгенерирован!
 
-
         CategoryDto categoryDtoFromService = subj.createNewCategory(categoryDto, connection);
-
-
         assertNotNull(categoryDto);
         assertNotEquals(-1L, (long)categoryDtoFromService.getId()); // Проверил генерацию ключа
         assertNotEquals(categoryDto.getId(), categoryDtoFromService.getId());
